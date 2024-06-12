@@ -1,0 +1,16 @@
+#+TITLE: Multi-index Testing
+#+OPTIONS: num:nil ^:{}
+
+Here is a new term: Flapdoodle mindex:flapdoodle. We now introduce a new function: =foo()=  mindex:fn|foo.
+
+New para.
+
+Here's a second function =bar()= mindex:fn|bar, and here mindex:fn|foo is another link to an existing index entry.
+** Concept Index
+
+[[printmindex:]]
+
+** Function Index
+
+[[printmindex:fn]]
+

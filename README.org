@@ -1,0 +1,61 @@
+#+TITLE: org-ref-multi-index
+#+DESCRIPTION: Multiple indicies in org-ref
+#+AUTHOR: Michael Herstine
+#+EMAIL: sp1ff@pobox.com
+#+DATE: <2024-06-12 Wed 11:47>
+#+AUTODATE: t
+#+OPTIONS: toc:nil org-md-headline-style:setext *:t ^:nil
+#+STARTUP: overview
+
+* Introduction
+
+[[https://github.com/sp1ff/org-ref-multi-index][org-ref-multi-index]] adds support for multiple indicies in [[https://orgmode.org/][Org Mode]] documents to [[https://github.com/jkitchin/org-ref][org-ref]].
+
+[[https://orgmode.org/][Org Mode]] is an [[https://www.gnu.org/software/emacs/][Emacs]] major mode for taking notes, authoring documents, literate programming & much more. The [[https://github.com/jkitchin/org-ref][org-ref]] package extends Org Mode with, among other things, support for Latex-style indicies in your Org Mode documents. [[https://github.com/sp1ff/org-ref-multi-index][org-ref-multi-index]] slightly extends org-ref by adding support for multiple indicies.
+* Prerequisites
+
+Other than Emacs 29.1, the package has no particular requirements (not even org-ref itself).
+* Installing
+
+The package is not currently available on MELPA. I plan on making an Emacs package available, but for now you'll have to clone this repo & build from source:
+
+#+BEGIN_SRC bash
+  cd /tmp
+  git clone https://github.com/sp1ff/org-ref-multi-index.git
+  cd org-ref-multi-index
+  ./bootstrap
+  ./configure
+  make
+  make check
+  sudo make install
+#+END_SRC
+* Using
+
+If you plan on exporting to Latex, you'll need the following headers in your Org Mode document:
+
+#+BEGIN_SRC org
+  ,#+LATEX_HEADER: \usepackage{imakeidx}
+  ,#+LATEX_HEADER: \makeindex[title=Concept Index] % This is the default index
+  ,#+LATEX_HEADER: \makeindex[name=fn,title=Function Index]
+#+END_SRC
+
+This will, on Latex export, create two indicies: the default index and a function index. You can of course customize the =\makeindex= invocations to suit your needs.
+
+Then, in the prose of your document, mark locations for inclusion in an index by inserting "mindex" links, e.g.
+
+#+BEGIN_SRC org
+  Here is a new term: Flapdoodle mindex:flapdoodle. We now introduce a new function: =foo()=  mindex:fn|foo.
+#+END_SRC
+
+When you'd like to include an index in your document, use the "printmindex" link type. In this case, =[[printmindex:]]= will produce the default index, and =[[printmindex:fn]]= will produce the function index.
+
+When exporting to Latex, this will result in these links being replaced with the equivalent Latex commands from the [[https://mirror.math.princeton.edu/pub/CTAN/macros/latex/contrib/imakeidx/imakeidx.pdf][imakeidx]] package. To export to other formats, install =org-ref-multi-index-proc= into =org-export-before-parsing-functions=:
+
+#+BEGIN_SRC elisp
+  (add-to-list 'org-export-before-parsing-functions #'org-ref-multi-index-proc)
+#+END_SRC
+
+This will, before export to non-Latex formats, replace all the "mindex" links with radio targets, and "printmindex" links with the corresponding index, linked back to those targets.
+* Status & Roadmap
+
+This is first code, but I'm using it day-in & day-out in my Org Mode documents. My thanks to [[https://github.com/jkitchin][John Kitchen]]; this implementation is highly derivative of his index support in [[https://github.com/jkitchin/org-ref][org-ref]].
